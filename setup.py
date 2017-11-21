@@ -12,13 +12,13 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='sample',
+    name='radioScrape',
     version='0.1.0',
     description='Sample package for Python-Guide.org',
     long_description=readme,
     author='Kenneth Reitz',
     author_email='me@kennethreitz.com',
-    url='https://github.com/kennethreitz/samplemod',
+    url='https://github.com/kennethreitz/radiomod',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
