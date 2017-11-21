@@ -1,6 +1,5 @@
 # from radioScrape import StateCheck
 import logging
-import .
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='radioScrape.log',
