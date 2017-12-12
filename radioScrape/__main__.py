@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from DAL.HTTP.requester import Requester
 import youtube_dl
 import requests
+import os
 #get_ipython().system('pip install cv2')
 
 
@@ -47,8 +48,13 @@ if __name__ == '__main__':
         # print(searchContentSoup.prettify())
         query = "https://www.youtube.com/results?maxResults=5&search_query=" + search
         print(query)
+        dir = 'd:/Music/radio_repo/pride_radio/test/'
+
+        if not os.path.exists('dir'):
+            os.mkdir(dir)
         ydl_opts = {}
-        ydl_opts = {'outtmpl': 'd:/Software/work_space/python/display_status/radiomod/downloads/%(title)s.%(ext)s','noplaylist' : True,'format': 'bestaudio/best','postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}], }
+        tgt_path = dir + '%(title)s.%(ext)s'
+        ydl_opts = {'outtmpl': tgt_path ,'noplaylist' : True,'format': 'bestaudio/best','postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}], }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([query])
