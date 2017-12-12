@@ -115,7 +115,7 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 
 # In[17]:
 
-get_ipython().system('pip install cv2')
+
 
 
 # In[19]:
