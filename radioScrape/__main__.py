@@ -54,8 +54,7 @@ if __name__ == '__main__':
             ydl.download([query])
         title='today'
         ext='songo'
-        ydl_opts = {'outtmpl': 'd:/Software/work_space/python/display_status/radiomod/downloads/%(title)s.%(ext)s',}
-
+        ydl_opts = {'outtmpl': 'd:/Music/radio_repo/pride_radio/%(title)s.%(ext)s',}
 
 
     # class Video(object):
