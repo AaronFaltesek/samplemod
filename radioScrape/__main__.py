@@ -6,8 +6,13 @@ import youtube_dl
 import requests
 import os
 import datetime
+from config.config import AppConfig
 #get_ipython().system('pip install cv2')
 from numba.tests.test_array_constants import dt
+
+import yaml
+
+
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='radioScrape.log',
@@ -16,9 +21,19 @@ logging.basicConfig(level=logging.DEBUG,
                     )
 
 
+
 if __name__ == '__main__':
     print("Starting application")
     print("Load config file")
+
+    config = AppConfig()
+    config.set_config_yml()
+    print("blah " + config.get_config_item('mp3_repo_base').__str__())
+    #set target dir
+
+    today = datetime.datetime.now().date().__str__()
+    base = config.get_config_item('mp3_repo_base').__str__()
+    dir = base + today + '/'
     print("Pull website to parse")
     soupObj = Requester("https://975pride.iheart.com/music/recently-played/")
     soup = soupObj.get()
@@ -49,8 +64,8 @@ if __name__ == '__main__':
         # print(searchContentSoup.prettify())
         query = "https://www.youtube.com/results?maxResults=5&search_query=" + search
         print(query)
-        today = datetime.datetime.now().date().__str__()
-        dir = 'd:/Music/radio_repo/pride_radio/' + today + '/'
+        # today = datetime.datetime.now().date().__str__()
+        # dir = 'd:/Music/radio_repo/pride_radio/' + today + '/'
 
         if not os.path.isdir(dir):
             os.mkdir(dir)
