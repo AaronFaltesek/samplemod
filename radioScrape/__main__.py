@@ -5,8 +5,9 @@ from DAL.HTTP.requester import Requester
 import youtube_dl
 import requests
 import os
+import datetime
 #get_ipython().system('pip install cv2')
-
+from numba.tests.test_array_constants import dt
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='radioScrape.log',
@@ -48,9 +49,10 @@ if __name__ == '__main__':
         # print(searchContentSoup.prettify())
         query = "https://www.youtube.com/results?maxResults=5&search_query=" + search
         print(query)
-        dir = 'd:/Music/radio_repo/pride_radio/test/'
+        today = datetime.datetime.now().date().__str__()
+        dir = 'd:/Music/radio_repo/pride_radio/' + today + '/'
 
-        if not os.path.exists('dir'):
+        if not os.path.isdir(dir):
             os.mkdir(dir)
         ydl_opts = {}
         tgt_path = dir + '%(title)s.%(ext)s'
