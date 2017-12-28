@@ -28,7 +28,6 @@ if __name__ == '__main__':
 
     config = AppConfig()
     config.set_config_yml()
-    print("blah " + config.get_config_item('mp3_repo_base').__str__())
     #set target dir
 
     today = datetime.datetime.now().date().__str__()
@@ -54,7 +53,16 @@ if __name__ == '__main__':
         searchAlt.replace(" ", "+")
         return searchAlt
 
+    def gen_dir_extended(dir,inc):
+        print(inc.__str__())
+        dir_extended=(dir+inc.__str__()+'/').__str__()
+        if not os.path.isdir(dir):
+            os.mkdir(dir)
+        if not os.path.isdir(dir_extended):
+            os.mkdir(dir_extended)
+        return dir_extended
 
+    inc = 0
     for search in imgAlt:
         search = genYouTubeQuery(search)
         search
@@ -67,10 +75,12 @@ if __name__ == '__main__':
         # today = datetime.datetime.now().date().__str__()
         # dir = 'd:/Music/radio_repo/pride_radio/' + today + '/'
 
-        if not os.path.isdir(dir):
-            os.mkdir(dir)
+        dir_extended = gen_dir_extended(dir,inc)
+        inc=inc+1
+
+
         ydl_opts = {}
-        tgt_path = dir + '%(title)s.%(ext)s'
+        tgt_path = dir_extended + '%(title)s.%(ext)s'
         ydl_opts = {'outtmpl': tgt_path ,'noplaylist' : True,'format': 'bestaudio/best','postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}], }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
