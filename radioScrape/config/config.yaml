@@ -1,2 +1,6 @@
 default:
   mp3_repo_base: 'd:/Music/radio_repo/pride_radio/'
+laptop:
+  mp3_repo_base: 'c:/Users/aaron/Music/radio_repo/'
+desktop:
+  mp3_repo_base: 'd:/Music/radio_repo/pride_radio/'
