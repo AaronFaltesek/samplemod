@@ -84,7 +84,11 @@ if __name__ == '__main__':
         ydl_opts = {'outtmpl': tgt_path ,'noplaylist' : True,'format': 'bestaudio/best','postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}], }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([query])
+            try:
+                ydl.download([query])
+            except:
+                print("Error: Unsupported url: " + query.__str__())
+
         title='today'
         ext='songo'
         ydl_opts = {'outtmpl': 'd:/Music/radio_repo/pride_radio/%(title)s.%(ext)s',}
