@@ -20,60 +20,77 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s : %(name)s :'
                     )
 
+def url_to_soup(url):
+    soupObj = Requester(url)
+    soup = soupObj.get()
+    return soup
 
+def genYouTubeQuery(searchAlt):
+    searchAlt.replace("''", "")
+    searchAlt.replace("   ", "+")
+    searchAlt.replace("  ", "+")
+    searchAlt.replace(" ", "+")
+    return searchAlt
+
+def gen_pride_song_list(url):
+     soup = url_to_soup(url)
+     mydivs = soup.findAll("div", {"class": "playlist-img"})
+     myimg = soup.findAll("img")
+     myimg.pop(0)
+     song_list = []
+     for img in myimg:
+         song_list.append(img.get('alt', ''))
+     song_list.pop()
+     return song_list
+
+def gen_dir_extended(dir,inc):
+    print(inc.__str__())
+    dir_extended=(dir+inc.__str__()+'/').__str__()
+    if not os.path.isdir(dir):
+        os.mkdir(dir)
+    if not os.path.isdir(dir_extended):
+        os.mkdir(dir_extended)
+    return dir_extended
+
+def first_video_link(query):
+    soup = url_to_soup(query)
+    print(soup)
+    #<a aria-hidden="true" class=" yt-uix-sessionlink spf-link " data-sessionlink="itct=CEgQ3DAYACITCI2GwLn41dgCFQVVPwodJFoLXCj0JFIsQnkgTXkgU2lkZSAoRGVmbGVjdCBPcmlnaW5hbCBNaXgpIC0gRmxhbmRlcnM" href="/watch?v=P-xjICAbiGU">
+    mydivs = soup.findAll("a", {"class": " yt-uix-sessionlink spf-link "})
+    print(mydivs)
+    first_html_a_element=mydivs[0]
+    first_link=first_html_a_element['href']
+    video_link='https://www.youtube.com'+first_link.__str__()
+    return video_link.__str__()
 
 if __name__ == '__main__':
     print("Starting application")
-    print("Load config file")
 
     config = AppConfig()
     config.set_config_yml()
-    #set target dir
 
     today = datetime.datetime.now().date().__str__()
     base = config.get_config_item('mp3_repo_base').__str__()
     dir = base + today + '/'
+
     print("Pull website to parse")
-    soupObj = Requester("https://975pride.iheart.com/music/recently-played/")
-    soup = soupObj.get()
-    print(soup)
-    mydivs = soup.findAll("div", { "class" : "playlist-img" })
-    print(mydivs)
-    myimg = soup.findAll("img")
-    myimg.pop(0)
-    imgAlt = []
-    for img in myimg:
-        imgAlt.append(img.get('alt', ''))
+
+    url = "https://975pride.iheart.com/music/recently-played/"
+    song_list = []
+    song_list = gen_pride_song_list(url)
+
+    print(song_list)
 
 
-    def genYouTubeQuery(searchAlt):
-        searchAlt.replace("''", "")
-        searchAlt.replace("   ", "+")
-        searchAlt.replace("  ", "+")
-        searchAlt.replace(" ", "+")
-        return searchAlt
 
-    def gen_dir_extended(dir,inc):
-        print(inc.__str__())
-        dir_extended=(dir+inc.__str__()+'/').__str__()
-        if not os.path.isdir(dir):
-            os.mkdir(dir)
-        if not os.path.isdir(dir_extended):
-            os.mkdir(dir_extended)
-        return dir_extended
 
     inc = 0
-    for search in imgAlt:
-        search = genYouTubeQuery(search)
-        search
-        searchContent = requests.get("https://www.youtube.com/results?search_query=" + search)
-        searchContentSoup = BeautifulSoup(searchContent.content, 'html.parser')
+    for song in song_list:
+        search = genYouTubeQuery(song)
 
-        # print(searchContentSoup.prettify())
         query = "https://www.youtube.com/results?maxResults=5&search_query=" + search
-        print(query)
-        # today = datetime.datetime.now().date().__str__()
-        # dir = 'd:/Music/radio_repo/pride_radio/' + today + '/'
+
+        link_to_download = first_video_link(query)
 
         dir_extended = gen_dir_extended(dir,inc)
         inc=inc+1
@@ -85,30 +102,13 @@ if __name__ == '__main__':
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             try:
-                ydl.download([query])
+                ydl.download([link_to_download])
             except:
-                print("Error: Unsupported url: " + query.__str__())
+                print("Error: Unsupported url: " + link_to_download.__str__())
 
         title='today'
         ext='songo'
-        ydl_opts = {'outtmpl': 'd:/Music/radio_repo/pride_radio/%(title)s.%(ext)s',}
 
-
-    # class Video(object):
-    #     def __init__(self, path):
-    #         self.path = path
-    #
-    #     def play(self):
-    #         from os import startfile
-    #         startfile(self.path)
-    #
-    #
-    # class Movie_MP4(Video):
-    #     type = "MP4"
-    #
-    #
-    # movie = Movie_MP4(r"testVid.mp4")
-    # movie.play()
 
 
 
